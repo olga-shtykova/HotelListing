@@ -24,10 +24,11 @@ namespace HotelListing
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<DatabaseContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("sqlConnection"))
-            );
+            options.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+
+            services.AddAuthentication();
+            services.ConfigureIdentity();
 
             services.AddCors(x => {
                 x.AddPolicy("CorsPolicyAllowAll", builder =>
