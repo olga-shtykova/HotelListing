@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
 using HotelListing.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace HotelListing
 {
@@ -70,6 +72,17 @@ namespace HotelListing
                     }                    
                 });
             });
+        }
+
+        public static void ConfigureVersioning(this IServiceCollection services)
+        {
+            services.AddApiVersioning(option =>
+            {
+                option.ReportApiVersions = true;
+                option.AssumeDefaultVersionWhenUnspecified = true;
+                option.DefaultApiVersion = new ApiVersion(1, 0);
+                option.ApiVersionReader = new HeaderApiVersionReader("api-version");
+            });            
         }
     }
 }
