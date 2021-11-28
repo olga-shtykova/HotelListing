@@ -13,6 +13,7 @@ using Serilog;
 using HotelListing.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Marvin.Cache.Headers;
 
 namespace HotelListing
 {
@@ -83,6 +84,22 @@ namespace HotelListing
                 option.DefaultApiVersion = new ApiVersion(1, 0);
                 option.ApiVersionReader = new HeaderApiVersionReader("api-version");
             });            
+        }
+
+        public static void ConfigureHttpCacheHeaders(this IServiceCollection services)
+        {
+            services.AddResponseCaching();
+            services.AddHttpCacheHeaders(
+                (expirationOption) =>
+                {
+                    expirationOption.MaxAge = 120;
+                    expirationOption.CacheLocation = CacheLocation.Private;
+                },
+                (validationOption) =>
+                {
+                    validationOption.MustRevalidate = true;
+                }
+            );
         }
     }
 }
