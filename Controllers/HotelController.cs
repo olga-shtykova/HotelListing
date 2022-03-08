@@ -5,6 +5,7 @@ using HotelListing.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ namespace HotelListing.Controllers
         public async Task<ActionResult> GetHotel(int id)
         {
             var hotel = await _unitOfWork.Hotels.Get(hotel => hotel.Id == id,
-                    new List<string> { "Country" });
+                    include: query => query.Include(h => h.Country));
             var result = _mapper.Map<HotelDTO>(hotel);
 
             return Ok(result);

@@ -6,6 +6,7 @@ using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -48,7 +49,7 @@ namespace HotelListing.Controllers
         public async Task<ActionResult> GetCountry(int id)
         {
             var country = await _unitOfWork.Countries.Get(country => country.Id == id,
-                    new List<string> { "Hotels" });
+                    include: query => query.Include(c => c.Hotels));
             var result = _mapper.Map<CountryDTO>(country);
 
             return Ok(result);
