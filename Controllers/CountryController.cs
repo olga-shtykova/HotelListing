@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using HotelListing.Core.DTOs;
+using HotelListing.Core.Models;
+using HotelListing.Core.Repository.Interfaces;
 using HotelListing.Data;
-using HotelListing.IRepository;
-using HotelListing.Models;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -34,11 +35,11 @@ namespace HotelListing.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> GetCountries([FromQuery] RequestParams requestParams)
-        {            
+        {
             var countries = await _unitOfWork.Countries.GetAll(requestParams);
             var result = _mapper.Map<List<CountryDTO>>(countries);
 
-            return Ok(result);           
+            return Ok(result);
         }
 
         [HttpGet("{id:int}")]
@@ -133,5 +134,5 @@ namespace HotelListing.Controllers
 
             return NoContent();
         }
-    }    
+    }
 }

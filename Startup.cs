@@ -1,8 +1,8 @@
-using HotelListing.Configurations;
+using HotelListing.Core;
+using HotelListing.Core.Repository;
+using HotelListing.Core.Repository.Interfaces;
+using HotelListing.Core.Services;
 using HotelListing.Data;
-using HotelListing.IRepository;
-using HotelListing.Repository;
-using HotelListing.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -35,14 +35,15 @@ namespace HotelListing
             services.ConfigureIdentity();
             services.ConfigureJWT(Configuration);
 
-            services.AddCors(x => {
+            services.AddCors(x =>
+            {
                 x.AddPolicy("CorsPolicyAllowAll", builder =>
                 builder.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
             });
 
-            services.AddAutoMapper(typeof(MapperInitializer));
+            services.ConfigureAutoMapper();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthManager, AuthManager>();
 
@@ -51,14 +52,14 @@ namespace HotelListing
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HotelListing", Version = "v1" });
             });
 
-            services.AddControllers(config => 
+            services.AddControllers(config =>
             {
                 config.CacheProfiles.Add("120SecondsDuration", new CacheProfile
                 {
-                    Duration = 120                    
+                    Duration = 120
                 });
-            }).AddNewtonsoftJson(option => 
-                option.SerializerSettings.ReferenceLoopHandling = 
+            }).AddNewtonsoftJson(option =>
+                option.SerializerSettings.ReferenceLoopHandling =
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.ConfigureVersioning();
@@ -69,7 +70,7 @@ namespace HotelListing
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();               
+                app.UseDeveloperExceptionPage();
             }
 
             app.UseSwagger();
@@ -89,7 +90,7 @@ namespace HotelListing
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
-            {                
+            {
                 endpoints.MapControllers();
             });
         }
